@@ -5,7 +5,7 @@ import com.ordernest.shipment.service.ShipmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +21,9 @@ public class ShipmentController {
     @PostMapping("/status")
     public ResponseEntity<Void> updateShipmentStatus(
             @Valid @RequestBody UpdateShipmentStatusRequest request,
-            @AuthenticationPrincipal String adminEmail
+            @RequestHeader(value = "Authorization", required = false) String authorization
     ) {
-        shipmentService.publishShipmentStatus(request, adminEmail);
+        shipmentService.publishShipmentStatus(request, authorization);
         return ResponseEntity.accepted().build();
     }
 }

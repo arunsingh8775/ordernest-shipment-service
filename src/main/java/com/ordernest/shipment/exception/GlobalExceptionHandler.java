@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,6 +23,15 @@ public class GlobalExceptionHandler {
                 "timestamp", Instant.now().toString(),
                 "status", HttpStatus.BAD_REQUEST.value(),
                 "message", message
+        ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                "timestamp", Instant.now().toString(),
+                "status", HttpStatus.FORBIDDEN.value(),
+                "message", ex.getMessage() == null ? "Forbidden" : ex.getMessage()
         ));
     }
 
